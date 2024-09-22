@@ -31,7 +31,7 @@
   - name: extract the code
     ansible.builtin.unarchive:
       src: /tmp/frontend.zip # by defailt ansible thins its in ansible server
-      dest: /usr/share/nginx/html  
+      dest: /usr/share/nginx/html
       remote_src: yes
   
   - name: copy expense conf
