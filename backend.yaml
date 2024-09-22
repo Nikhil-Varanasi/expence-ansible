@@ -1,6 +1,10 @@
 - name: configure backend server
   hosts: backend
   become: yes
+  vars:
+    mysql_root_password: ExpenseApp@1
+    login_host: mysql.nikhilvaranasi.online
+
   tasks:
   - name:  disable defauit nodejs
     ansible.builtin.command: dnf module disable nodejs -y
@@ -32,3 +36,20 @@
       src: /tmp/backend.zip # by defailt ansible thins its in ansible server
       dest: /app  
       remote_src: yes
+
+  - name: install dependencies
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
+
+  - name: copy backend service
+    ansible.builtin.copy:
+      src: backend.service
+      dest: /etc/systemd/system/backend.service
+
+  - name: import  mysql data
+    community.mysql.mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_host: "{{ login_host }}"
+
